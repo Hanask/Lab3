@@ -17,5 +17,5 @@ const server = app.listen(port, () => {
  console.log(`Cart app listening at http://localhost:${port}`);
 });
 //pass requests to the router middleware
-const router = require('./routes/post');
+const router = require('./routes/apis');
 app.use(router);
