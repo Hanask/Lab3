@@ -16,3 +16,6 @@ const port = process.argv[2] || process.env.PORT || 3000;
 const server = app.listen(port, () => {
  console.log(`Cart app listening at http://localhost:${port}`);
 });
+//pass requests to the router middleware
+const router = require('./routes/post');
+app.use(router);
