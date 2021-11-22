@@ -1,12 +1,15 @@
 <%- include('header'); -%>
 <div class='content'>
     <h1>Please log-in here:</h1>
-    <form action="/api/login" method="get">
+    <form action="/api/login" method="post">
         <label for="username">Username:</label><br>
         <input type="text" id="username" name="username"><br>
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password"><br>
-        <input type="submit" value="Sign-in"><br>
+        <button>Sign-in</button><br>
+    </form>
+    <form action="/register">
+    <button>Register</button>
     </form>
 </div>
 <%- include('footer'); -%>
