@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+    <title>Webstore</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/hwu.css" title="HWU">
+    <link rel="shortcut icon" href="/hwu.png">
+    <meta http-equiv="pragma" content="no-cache" />
+</head>
+
+<body>
+    <div class="banner">
+        <div class="logo">
+            <a href='http://www.hw.ac.uk' target="top">
+                <img src="/hwu.png" width="64" height="64" alt="Logo HWU" />
+            </a>
+        </div>
+
+        <div class="title">
+            <H1>WEBSTORE</H1>
+        </div>
+    </div>
+
+    <div class="menu">
+        <table class='tmenu'>
+            <thead>
+                <th id='th'> </th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="/">Home</a></td>
+                    <td>
+                        <a href="/api/catalogue">Catalogue</a></td>
+                    <td>
+                        <a href="/api/clients">Clients</a></td>
+                    <td>
+                        <a href="/contacts">Contacts</a></td>
+
+                    <td>
+                        <a href="controller.php?action=6">Cart</a>
+                    </td>
+                    <td>
+                        <a href="/login">Sign-in</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+<div class="content">
+  <h1>Client details:</h1>
+  <table id="catalog">
+    <thead>
+      <tr>
+        <th>Client Number</th>
+        <th scope="col">Society</th>
+        <th scope="col">Contact</th>
+        <th scope="col">Address</th>
+        <th scope="col">ZipCode</th>
+        <th scope="col">City</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Fax</th>
+        <th scope="col">Confirmation</th>
+        <th scope="col">Payments</th>
+        <th scope="col">Information</th>
+        <th scope="col">Max Outstanding</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% client.forEach(clients => { %>
+      <tr>
+        <th scope="row">
+            <%= clients.num_client%>
+        </th>
+        <td>
+            <%= clients.society %>
+               
+        </td>
+        <td>
+            <%= clients.contact %>
+        </td>
+        <td>
+            <%= clients.addres %>
+        </td>
+        <td>
+            <%= clients.zipcode %>
+        </td>
+        <td>
+            <%= clients.city %>
+        </td>
+        <td>
+            <%= clients.phone %>
+        </td>
+        <td>
+            <%= clients.fax %>
+        </td>
+        <td>
+            <%= clients.confirmation %>
+        </td>
+        <td>
+            <%= clients.payment %>
+        </td>
+        <td>
+            <%= clients.Informations %>
+        </td>
+        <td>
+            <%= clients.max_outstanding %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<br>
+<div id="foot">
+    <p>Copyright &copy; (2021) - H W U</p>
+</div>
+</body>
+
+</html>

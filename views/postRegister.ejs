@@ -1,8 +1,8 @@
 <%- include('header'); -%>
-    <div class='content'>
-        <h2>
-            <%= message %> please <a href="/register">try again</a>
-        </h2>
-        <br>
-    </div>
+<div class='content'>
+    <h1 id="result"><%= result %></h1>
+    <form action="/register">
+        <button>Go Back to Register</button>
+    </form>
+</div>
 <%- include('footer'); -%>

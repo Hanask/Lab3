@@ -1,27 +1,38 @@
+const { response, request } = require("express");
+const express = require("express");
 const { Client } = require("../models/entities");
+const clientDAO = require("../db/clientDAO");
+const database = require("../db/dbQuery");
+
 const loginControl = (request, response) => {
     const clientServices = require('../services/clientServices');
 
     let username = request.body.username;
     let password = request.body.password;
     if (!username || !password) {
-        response.render('loginfail', { username: `Login failed, please try again` });
+        response.render("postLogin", {result: "Please type in a valid username or password",});
     }else {
-        if (request.session && request.session.user) {
-            response.render('postLogin', { username: username });
+        if (request.session && request.session.user== username) {
+            response.render("postLogin", { result: "Already logged in!" });
         } else {
             clientServices.loginService(username, password, function(err, dberr, client) {
                 console.log("Client from login service :" + JSON.stringify(client));
                 if (client === null) {
                     console.log("Authentication problem!");
-                    response.render('loginfail', { username: `Login failed, please try again` });
+                    response.render("postLogin", { result: "Login failed" });
                 } else {
                     console.log("User from login service :" + client[0].num_client);
                     //add to session
                     request.session.user = username;
                     request.session.num_client = client[0].num_client;
-                    request.session.admin = false;
-                    response.render('postLogin', { username: username }); 
+                    if (username == "Hana") {
+                        request.session.admin = true;
+                    } else {
+                        request.session.admin = false;
+                    }
+                    response.render("postLogin", {
+                        result: `Login successful! (Username: ${username}, ID: ${client[0].num_client})`,
+                    });
                 }
             });
         }
@@ -46,19 +57,16 @@ const registerControl = (request, response) => {
 
     clientServices.registerService(client, function(err, exists, insertedID) {
         console.log("User from register service :" + insertedID);
-        if (exists) {
+        if (err) {
+        }else if (exists) {
             console.log("Username taken!");
-            response.render('postRegister', { message: `Registration failed. Username "${username}" already taken!` });
+            response.render('postRegister', { result: `Registration failed. Username "${username}" already taken!` });
         } else {
             client.num_client = insertedID;
             console.log(`Registration (${username}, ${insertedID}) successful!`);
-            console.log('Please to continue to login now');
+            console.log('Please login to continue');
             response.render('login');
-        //     response.render("registerpage", {
-        //         result: `Successful registration ${client.contact} (ID: ${client.num_client})!`,
-        //     });
-        // }
-        // response.end();
+        response.end();
         }
     });
 };
@@ -71,39 +79,44 @@ const getClients = (request, response) => {
     });
 };
 
-const getClientByNumclient = (request, response) => {
-    const clientServices = require('../services/clientServices');
-    let num_client = request.params.num_client;
-    clientServices.searchNumclientService(num_client, function(err, rows) {
-        response.json(rows);
-        response.end();
+function getClientByNumclient(num, callback) {
+    clientDAO.findByNumclient(num, function (err, rows) {
+      callback(null, rows);
     });
-};
+  }
+  
 const getClient = (request, response) => {
-    const clientServices = require('../services/clientServices');
-    let username = request.params.username;
-    let num_client;
-  
-    clientServices.searchUsername(username, function(err, rows) {
-        num_client = rows[0].num_client
-        clientServices.searchNumclientService(num_client, function(err, rows) {
-            console.log(rows[0])
-            response.render('clientDetails', {
-                username: username,
-                num_client: rows[0].num_client,
-                society: rows[0].society,
-                contact: rows[0].contact,
-                address: rows[0].addres,
-                zipcode: rows[0].zipcode,
-                city: rows[0].city,
-                phone: rows[0].phone,
-                fax: rows[0].fax,
-                maxOutstanding: rows[0].max_outstanding,
-            });
-        });
+  const clientServices = require('../services/clientServices');
+  let username = request.session.user;
+  if (request.session.admin) {
+    const selectClient = "SELECT * from client";
+    database.getResult(selectClient, function (err, rows) {
+      if (!err) {
+        response.render("clients_admin", { client: rows });
+      } else {
+      }
     });
-  
-  };
+  } else {
+    clientDAO.findByUsername(username, function (err, rows) {
+      num = rows[0].num_client;
+      getClientByNumclient(num, function (err, rows_2) {
+        response.render("clients_user", {
+          username: username,
+          num: num,
+          society: rows_2[0].society,
+          contact: rows_2[0].contact,
+          addres: rows_2[0].addres,
+          zipcode: rows_2[0].zipcode,
+          city: rows_2[0].city,
+          phone: rows_2[0].phone,
+          fax: rows_2[0].fax,
+          max: rows_2[0].max_outstanding,
+        });
+      });
+    });
+  }
+};
+
 module.exports = {
     loginControl,
     registerControl,

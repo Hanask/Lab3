@@ -1,12 +1,5 @@
 <%- include('header'); -%>
-<div class='content'>
-    <h1>
-        <a href="/api/login/<%= username %>">
-            Hi, <%= username %>!
-        </a>
-    </h1>
-    <h3>Would you like to browse through <a href="/api/catalogue">catalog</a>?</h3>
-    
-    <br>
+<div class="content">
+  <h1 id="result"><%= result %></h1>
 </div>
 <%- include('footer'); -%>
